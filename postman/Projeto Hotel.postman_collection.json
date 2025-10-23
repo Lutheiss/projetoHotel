@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "fab4c48b-da3d-4d51-86ea-b14e42056370",
+		"name": "Projeto Hotel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29217059"
+	},
+	"item": [
+		{
+			"name": "Criar hóspede",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });",
+							"var json = pm.response.json();",
+							"pm.test(\"Tem ID\", function () { pm.expect(json.id).to.be.a('number'); });",
+							"pm.environment.set('hospede_id', json.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João Silva\",\n  \"documento\": \"12345678900\",\n  \"telefone\": \"(47) 99999-9999\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/hospedes",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"hospedes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar hóspedes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/hospedes",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"hospedes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/hospedes/buscar?q=luiza",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"hospedes",
+						"buscar"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "luiza"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Detalhe hóspede",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/hospedes/{{hospede_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"hospedes",
+						"{{hospede_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check-in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });",
+							"pm.environment.set('checkin_id', pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"hospedeId\": {{hospede_id}},\n  \"dataEntrada\": \"2025-10-20T14:00:00\",\n  \"adicionalVeiculo\": true\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/checkIns",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"checkIns"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "No hotel agora",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/checkIns/no-hotel",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"checkIns",
+						"no-hotel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Checkout",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"dataSaida\": \"2025-10-22T10:00:00\" }"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/checkIns/{{checkin_id}}/checkout",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"checkIns",
+						"{{checkin_id}}",
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Valores por hóspede",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/hospedes/{{hospede_id}}/valores",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"hospedes",
+						"{{hospede_id}}",
+						"valores"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Histórico (Hospedes que saíram)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/checkIns/historico",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"checkIns",
+						"historico"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
